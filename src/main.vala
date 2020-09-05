@@ -16,28 +16,14 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-double hit_sphere (point3 center, double radius, ray r) {
-    var oc = r.origin.substract (center);
-    var a = r.direction.dot (r.direction);
-    var half_b = oc.dot (r.direction);
-    var c = oc.length_squared () - radius*radius;
-    var discriminant = half_b*half_b - a*c;
-    if (discriminant < 0) {
-        return -1;
-    } else {
-        return (- half_b - Math.sqrt (discriminant)) / a;
-    }
-}
-
-color ray_color(ray r) {
-    var t = hit_sphere (point3 (0, 0, -1), 0.5, r);
-    if (t > 0) {
-        var N = r.at (t).substract (vec3 (0, 0, -1));
-        return color (N.x+1, N.y + 1, N.z + 1).scale (0.5);
+color ray_color(ray r, Hittable world) {
+    HitRecord rec = {};
+    if (world.hit (r, 0, double.INFINITY, ref rec)) {
+        return rec.normal.add (color (1, 1, 1)).scale (0.5);
     }
 
     var unit_direction = r.direction.unit_vector();
-    t = 0.5 * (unit_direction.y + 1.0);
+    var t = 0.5 * (unit_direction.y + 1.0);
     return color (1, 1, 1).scale (1.0-t).add (color (0.5, 0.7, 1.0).scale (t));
 }
 
@@ -48,6 +34,11 @@ int main (string[] args)
     var aspect_ratio = 16.0 / 9.0;
     int image_width = 400;
     int image_height = (int) (image_width / aspect_ratio);
+
+    // World
+    var world = new HittableList ();
+    world.add (new Sphere (point3 (0, 0, -1), 0.5));
+    world.add (new Sphere (point3 (0, -100.5, -1), 100));
 
     // Camera
 
@@ -73,7 +64,7 @@ int main (string[] args)
 	        var v = (double) j / (image_height - 1);
 	        // lower_left_corner + u*horizontal.scale + v*vertical - origin
 	        var r = ray (origin, lower_left_corner.add (horizontal.scale (u)).add (vertical.scale (v)).add (origin.negate ()));
-	        var pixel_color = ray_color (r);
+	        var pixel_color = ray_color (r, world);
 	        print(@"$pixel_color\n");
 	    }
 	}

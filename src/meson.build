@@ -2,6 +2,9 @@ raytracinginoneweekend_sources = [
   'main.vala',
   'vec3.vala',
   'ray.vala',
+  'hittable.vala',
+  'sphere.vala',
+  'hittable_list.vala',
 ]
 
 cc = meson.get_compiler('c')
