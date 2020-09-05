@@ -16,21 +16,28 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-bool hit_sphere (point3 center, double radius, ray r) {
+double hit_sphere (point3 center, double radius, ray r) {
     var oc = r.origin.substract (center);
     var a = r.direction.dot (r.direction);
     var b = 2.0 * oc.dot (r.direction);
     var c = oc.dot (oc) - radius*radius;
     var discriminant = b*b - 4*a*c;
-    return (discriminant >= 0);
+    if (discriminant < 0) {
+        return -1;
+    } else {
+        return (- b - Math.sqrt (discriminant)) / (2 * a);
+    }
 }
 
 color ray_color(ray r) {
-    if (hit_sphere (point3 (0, 0, -1), 0.5, r))
-        return color (1, 0, 0);
+    var t = hit_sphere (point3 (0, 0, -1), 0.5, r);
+    if (t > 0) {
+        var N = r.at (t).substract (vec3 (0, 0, -1));
+        return color (N.x+1, N.y + 1, N.z + 1).scale (0.5);
+    }
 
     var unit_direction = r.direction.unit_vector();
-    var t = 0.5 * (unit_direction.y + 1.0);
+    t = 0.5 * (unit_direction.y + 1.0);
     return color (1, 1, 1).scale (1.0-t).add (color (0.5, 0.7, 1.0).scale (t));
 }
 
