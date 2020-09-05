@@ -1,10 +1,14 @@
 raytracinginoneweekend_sources = [
   'main.vala',
+  'vec3.vala',
 ]
+
+cc = meson.get_compiler('c')
 
 raytracinginoneweekend_deps = [
   dependency('glib-2.0'),
   dependency('gobject-2.0'),
+  cc.find_library('m', required: false),
 ]
 
 executable('raytracinginoneweekend', raytracinginoneweekend_sources,

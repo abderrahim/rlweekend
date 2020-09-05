@@ -32,15 +32,10 @@ int main (string[] args)
 	for (int j = image_height - 1; j >= 0; j--) {
 	    printerr (@"\rScanlines remaining: $j ");
 	    for (int i = 0; i < image_width; i++) {
-	        var r = (double) i / (image_width - 1);
-	        var g = (double) j / (image_height - 1);
-	        var b = 0.25;
-
-	        int ir = (int) (255.999 * r);
-	        int ig = (int) (255.999 * g);
-	        int ib = (int) (255.999 * b);
-
-	        print(@"$ir $ig $ib\n");
+	        var pixel_color = color ((double) i / (image_width - 1),
+	                                 (double) j / (image_height - 1),
+	                                 0.25);
+	        print(@"$pixel_color\n");
 	    }
 	}
 
