@@ -30,6 +30,7 @@ int main (string[] args)
     print ("255\n");
 
 	for (int j = image_height - 1; j >= 0; j--) {
+	    printerr (@"\rScanlines remaining: $j ");
 	    for (int i = 0; i < image_width; i++) {
 	        var r = (double) i / (image_width - 1);
 	        var g = (double) j / (image_height - 1);
@@ -42,5 +43,7 @@ int main (string[] args)
 	        print(@"$ir $ig $ib\n");
 	    }
 	}
+
+	printerr ("\nDone.\n");
 	return 0;
 }
