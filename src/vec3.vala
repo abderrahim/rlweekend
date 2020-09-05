@@ -31,9 +31,9 @@ public struct vec3 {
         return vec3 (e[0] + v.e[0], e[1] + v.e[1], e[2] + v.e[2]);
     }
 
-    public double length { get { return Math.sqrt (length_squared); } }
-    public double length_squared {
-        get { return e[0] * e[0] + e[1] * e[1] + e[2] * e[2]; }
+    public double length () { return Math.sqrt (length_squared ()); }
+    public double length_squared () {
+        return e[0] * e[0] + e[1] * e[1] + e[2] * e[2];
     }
 
     public string to_string () {
@@ -51,7 +51,7 @@ public struct vec3 {
     }
 
     public vec3 unit_vector () {
-        return divide (length);
+        return divide (length ());
     }
 }
 

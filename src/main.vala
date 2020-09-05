@@ -19,13 +19,13 @@
 double hit_sphere (point3 center, double radius, ray r) {
     var oc = r.origin.substract (center);
     var a = r.direction.dot (r.direction);
-    var b = 2.0 * oc.dot (r.direction);
-    var c = oc.dot (oc) - radius*radius;
-    var discriminant = b*b - 4*a*c;
+    var half_b = oc.dot (r.direction);
+    var c = oc.length_squared () - radius*radius;
+    var discriminant = half_b*half_b - a*c;
     if (discriminant < 0) {
         return -1;
     } else {
-        return (- b - Math.sqrt (discriminant)) / (2 * a);
+        return (- half_b - Math.sqrt (discriminant)) / a;
     }
 }
 
