@@ -16,12 +16,30 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+color ray_color(ray r) {
+    var unit_direction = r.direction.unit_vector();
+    var t = 0.5 * (unit_direction.y + 1.0);
+    return color (1, 1, 1).scale (1.0-t).add (color (0.5, 0.7, 1.0).scale (t));
+}
+
 int main (string[] args)
 {
 
     // Image
-    int image_width = 256;
-    int image_height = 256;
+    var aspect_ratio = 16.0 / 9.0;
+    int image_width = 400;
+    int image_height = (int) (image_width / aspect_ratio);
+
+    // Camera
+
+    var viewport_height = 2.0;
+    var viewport_width = aspect_ratio * viewport_height;
+    var focal_length = 1.0;
+
+    var origin = point3 (0, 0, 0);
+    var horizontal = vec3 (viewport_width, 0, 0);
+    var vertical = vec3 (0, viewport_height, 0);
+    var lower_left_corner = vec3 (-viewport_width/2, -viewport_height/2, - focal_length);
 
     // Render
 
@@ -32,9 +50,11 @@ int main (string[] args)
 	for (int j = image_height - 1; j >= 0; j--) {
 	    printerr (@"\rScanlines remaining: $j ");
 	    for (int i = 0; i < image_width; i++) {
-	        var pixel_color = color ((double) i / (image_width - 1),
-	                                 (double) j / (image_height - 1),
-	                                 0.25);
+	        var u = (double) i / (image_width - 1);
+	        var v = (double) j / (image_height - 1);
+	        // lower_left_corner + u*horizontal.scale + v*vertical - origin
+	        var r = ray (origin, lower_left_corner.add (horizontal.scale (u)).add (vertical.scale (v)).add (origin.negate ()));
+	        var pixel_color = ray_color (r);
 	        print(@"$pixel_color\n");
 	    }
 	}

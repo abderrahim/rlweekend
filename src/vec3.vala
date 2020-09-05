@@ -52,7 +52,9 @@ public struct vec3 {
 }
 
 // Type aliases for vec3
-public struct point3 : vec3 {} // 3D point
+public struct point3 : vec3 {
+    public point3 (double x, double y, double z) { base (x, y, z); }
+}
 public struct color : vec3 {
     public color (double r, double g, double b) { base (r, g, b); }
     public new string to_string () {
