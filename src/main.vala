@@ -34,6 +34,7 @@ int main (string[] args)
     var aspect_ratio = 16.0 / 9.0;
     int image_width = 400;
     int image_height = (int) (image_width / aspect_ratio);
+    int samples_per_pixel = 100;
 
     // World
     var world = new HittableList ();
@@ -42,14 +43,7 @@ int main (string[] args)
 
     // Camera
 
-    var viewport_height = 2.0;
-    var viewport_width = aspect_ratio * viewport_height;
-    var focal_length = 1.0;
-
-    var origin = point3 (0, 0, 0);
-    var horizontal = vec3 (viewport_width, 0, 0);
-    var vertical = vec3 (0, viewport_height, 0);
-    var lower_left_corner = vec3 (-viewport_width/2, -viewport_height/2, - focal_length);
+    var cam = new Camera ();
 
     // Render
 
@@ -57,18 +51,21 @@ int main (string[] args)
     print (@"$image_width $image_height\n");
     print ("255\n");
 
-	for (int j = image_height - 1; j >= 0; j--) {
-	    printerr (@"\rScanlines remaining: $j ");
-	    for (int i = 0; i < image_width; i++) {
-	        var u = (double) i / (image_width - 1);
-	        var v = (double) j / (image_height - 1);
-	        // lower_left_corner + u*horizontal.scale + v*vertical - origin
-	        var r = ray (origin, lower_left_corner.add (horizontal.scale (u)).add (vertical.scale (v)).add (origin.negate ()));
-	        var pixel_color = ray_color (r, world);
-	        print(@"$pixel_color\n");
-	    }
-	}
+    for (int j = image_height - 1; j >= 0; j--) {
+        printerr (@"\rScanlines remaining: $j ");
+        for (int i = 0; i < image_width; i++) {
+            color pixel_color = {};
+            for (int s = 0; s < samples_per_pixel; s++) {
+                var u = (i + Random.next_double ()) / (image_width - 1);
+                var v = (j + Random.next_double ()) / (image_height - 1);
+                var r = cam.get_ray (u, v);
+                pixel_color = pixel_color.add (ray_color (r, world));
+            }
+            pixel_color = pixel_color.divide (samples_per_pixel);
+            print(@"$pixel_color\n");
+        }
+    }
 
-	printerr ("\nDone.\n");
-	return 0;
+    printerr ("\nDone.\n");
+    return 0;
 }
