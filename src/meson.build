@@ -1,6 +1,7 @@
 raytracinginoneweekend_sources = [
   'main.vala',
   'vec3.vala',
+  'ray.vala',
 ]
 
 cc = meson.get_compiler('c')
