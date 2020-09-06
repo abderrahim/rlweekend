@@ -16,10 +16,26 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-color ray_color(ray r, Hittable world) {
+public static vec3 random_in_unit_sphere () {
+    while (true) {
+        var p = vec3.random ();
+        if (p.length_squared () >= 1)
+            continue;
+
+        return p;
+    }
+}
+
+color ray_color(ray r, Hittable world, int depth) {
     HitRecord rec = {};
+
+    // If we exceeded the ray bounce limit, no more light is gathered
+    if (depth <= 0)
+        return color (0, 0, 0);
+
     if (world.hit (r, 0, double.INFINITY, ref rec)) {
-        return rec.normal.add (color (1, 1, 1)).scale (0.5);
+        point3 target = rec.p.add (rec.normal).add (random_in_unit_sphere ());
+        return ray_color (ray (rec.p, target.substract (rec.p)), world, depth - 1).scale (0.5);
     }
 
     var unit_direction = r.direction.unit_vector();
@@ -35,6 +51,7 @@ int main (string[] args)
     int image_width = 400;
     int image_height = (int) (image_width / aspect_ratio);
     int samples_per_pixel = 100;
+    int max_depth = 50;
 
     // World
     var world = new HittableList ();
@@ -59,7 +76,7 @@ int main (string[] args)
                 var u = (i + Random.next_double ()) / (image_width - 1);
                 var v = (j + Random.next_double ()) / (image_height - 1);
                 var r = cam.get_ray (u, v);
-                pixel_color = pixel_color.add (ray_color (r, world));
+                pixel_color = pixel_color.add (ray_color (r, world, max_depth));
             }
             pixel_color = pixel_color.divide (samples_per_pixel);
             print(@"$pixel_color\n");

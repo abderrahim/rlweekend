@@ -53,6 +53,14 @@ public struct vec3 {
     public vec3 unit_vector () {
         return divide (length ());
     }
+
+    public static vec3 random () {
+        return vec3 (Random.next_double (), Random.next_double (), Random.next_double ());
+    }
+
+    public static vec3 random_range (double min, double max) {
+        return vec3 (Random.double_range (min, max), Random.double_range (min, max), Random.double_range (min, max));
+    }
 }
 
 // Type aliases for vec3
