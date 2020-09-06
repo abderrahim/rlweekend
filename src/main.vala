@@ -79,6 +79,12 @@ int main (string[] args)
                 pixel_color = pixel_color.add (ray_color (r, world, max_depth));
             }
             pixel_color = pixel_color.divide (samples_per_pixel);
+
+            // gamma-correct for gamma = 2
+            pixel_color = color (Math.sqrt (pixel_color.x),
+                                 Math.sqrt (pixel_color.y),
+                                 Math.sqrt (pixel_color.z));
+
             print(@"$pixel_color\n");
         }
     }
