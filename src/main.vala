@@ -16,9 +16,9 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-public static vec3 random_in_unit_sphere () {
+public vec3 random_in_unit_sphere () {
     while (true) {
-        var p = vec3.random ();
+        var p = vec3.random_range (-1, 1);
         if (p.length_squared () >= 1)
             continue;
 
