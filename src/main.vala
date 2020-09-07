@@ -16,6 +16,24 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+public vec3 random_in_unit_sphere () {
+    while (true) {
+        var p = vec3.random_range (-1, 1);
+        if (p.length_squared () >= 1)
+            continue;
+
+        return p;
+    }
+}
+
+public vec3 random_in_hemisphere (vec3 normal) {
+    var in_unit_sphere = random_in_unit_sphere ();
+    if (in_unit_sphere.dot (normal) > 0) // In the same hemisphere as the normal
+        return in_unit_sphere;
+    else
+        return in_unit_sphere.negate ();
+}
+
 public vec3 random_unit_vector () {
     var a = Random.double_range (0, 2*Math.PI);
     var z = Random.double_range (-1, 1);
@@ -31,7 +49,12 @@ color ray_color(ray r, Hittable world, int depth) {
         return color (0, 0, 0);
 
     if (world.hit (r, 0.001, double.INFINITY, ref rec)) {
+        // lazy hack
+        //point3 target = rec.p.add (rec.normal).add (random_in_unit_sphere ());
+        // lambertian
         point3 target = rec.p.add (rec.normal).add (random_unit_vector ());
+        // old method used before the lambertian
+        //point3 target = rec.p.add (random_in_hemisphere ());
         return ray_color (ray (rec.p, target.substract (rec.p)), world, depth - 1).scale (0.5);
     }
 
