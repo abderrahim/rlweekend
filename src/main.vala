@@ -33,7 +33,7 @@ color ray_color(ray r, Hittable world, int depth) {
     if (depth <= 0)
         return color (0, 0, 0);
 
-    if (world.hit (r, 0, double.INFINITY, ref rec)) {
+    if (world.hit (r, 0.001, double.INFINITY, ref rec)) {
         point3 target = rec.p.add (rec.normal).add (random_in_unit_sphere ());
         return ray_color (ray (rec.p, target.substract (rec.p)), world, depth - 1).scale (0.5);
     }
