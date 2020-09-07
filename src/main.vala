@@ -16,14 +16,11 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-public vec3 random_in_unit_sphere () {
-    while (true) {
-        var p = vec3.random_range (-1, 1);
-        if (p.length_squared () >= 1)
-            continue;
-
-        return p;
-    }
+public vec3 random_unit_vector () {
+    var a = Random.double_range (0, 2*Math.PI);
+    var z = Random.double_range (-1, 1);
+    var r = Math.sqrt (1 - z*z);
+    return vec3 (r * Math.cos (a), r * Math.sin (a), z);
 }
 
 color ray_color(ray r, Hittable world, int depth) {
@@ -34,7 +31,7 @@ color ray_color(ray r, Hittable world, int depth) {
         return color (0, 0, 0);
 
     if (world.hit (r, 0.001, double.INFINITY, ref rec)) {
-        point3 target = rec.p.add (rec.normal).add (random_in_unit_sphere ());
+        point3 target = rec.p.add (rec.normal).add (random_unit_vector ());
         return ray_color (ray (rec.p, target.substract (rec.p)), world, depth - 1).scale (0.5);
     }
 
