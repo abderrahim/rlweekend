@@ -1,6 +1,7 @@
 public struct HitRecord {
     public point3 p;
     public vec3 normal;
+    public Material mat;
     public double t;
     public bool front_face;
 

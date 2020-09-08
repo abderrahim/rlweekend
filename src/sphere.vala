@@ -1,10 +1,12 @@
 public class Sphere : Hittable {
     point3 center;
     double radius;
+    Material mat;
 
-    public Sphere (point3 cen, double r) {
+    public Sphere (point3 cen, double r, Material m) {
         center = cen;
         radius = r;
+        mat = m;
     }
 
     public override bool hit (ray r, double tmin, double tmax, ref HitRecord rec) {
@@ -23,6 +25,7 @@ public class Sphere : Hittable {
                 rec.p = r.at (rec.t);
                 var outward_normal = rec.p.substract (center).divide (radius);
                 rec.set_face_normal (r, outward_normal);
+                rec.mat = mat;
                 return true;
             }
 
@@ -32,6 +35,7 @@ public class Sphere : Hittable {
                 rec.p = r.at (rec.t);
                 var outward_normal = rec.p.substract (center).divide (radius);
                 rec.set_face_normal (r, outward_normal);
+                rec.mat = mat;
                 return true;
             }
         }

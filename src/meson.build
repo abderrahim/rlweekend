@@ -6,6 +6,7 @@ raytracinginoneweekend_sources = [
   'sphere.vala',
   'hittable_list.vala',
   'camera.vala',
+  'material.vala',
 ]
 
 cc = meson.get_compiler('c')
