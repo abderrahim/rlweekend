@@ -28,7 +28,7 @@ public struct vec3 {
     public vec3 divide (double t) { return scale(1/t); }
 
     public vec3 multiply (vec3 v) {
-        return vec3 (e[0] + v.e[0], e[1] + v.e[1], e[2] + v.e[2]);
+        return vec3 (e[0] * v.e[0], e[1] * v.e[1], e[2] * v.e[2]);
     }
 
     public double length () { return Math.sqrt (length_squared ()); }
