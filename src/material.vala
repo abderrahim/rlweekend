@@ -79,14 +79,16 @@ vec3 reflect (vec3 v, vec3 n) {
 
 public class Metal : Material {
     color albedo;
+    double fuzz;
 
-    public Metal (color a) {
+    public Metal (color a, double f) {
         albedo = a;
+        fuzz = f < 1 ? f : 1;
     }
 
     public override bool scatter (ray r_in, HitRecord rec, out color attenuation, out ray scattered) {
         var reflected = reflect (r_in.direction.unit_vector (), rec.normal);
-        scattered = ray (rec.p, reflected);
+        scattered = ray (rec.p, reflected.add (random_in_unit_sphere ().scale (fuzz)));
         attenuation = albedo;
         return (scattered.direction.dot (rec.normal) > 0);
     }
