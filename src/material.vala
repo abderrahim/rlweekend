@@ -93,3 +93,28 @@ public class Metal : Material {
         return (scattered.direction.dot (rec.normal) > 0);
     }
 }
+
+vec3 refract (vec3 uv, vec3 n, double etai_over_etat) {
+    var cos_theta = uv.negate ().dot (n);
+    var r_out_perp = uv.add (n.scale (cos_theta)).scale (etai_over_etat);
+    var r_out_parallel = n.scale (- Math.sqrt (Math.fabs (1 - r_out_perp.length_squared ())));
+    return r_out_perp.add (r_out_parallel);
+}
+
+public class Dielectric : Material {
+    double ref_idx;
+
+    public Dielectric (double ri) {
+        ref_idx = ri;
+    }
+
+    public override bool scatter (ray r_in, HitRecord rec, out color attenuation, out ray scattered) {
+        attenuation = color (1, 1, 1);
+        double etai_over_etat = rec.front_face ? (1 / ref_idx) : ref_idx;
+
+        var unit_direction = r_in.direction.unit_vector ();
+        var refracted = refract (unit_direction, rec.normal, etai_over_etat);
+        scattered = ray (rec.p, refracted);
+        return true;
+    }
+}

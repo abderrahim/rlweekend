@@ -50,8 +50,8 @@ int main (string[] args)
     var world = new HittableList ();
 
     var material_ground = new Lambertian (color (0.8, 0.8, 0.0));
-    var material_center = new Lambertian (color (0.7, 0.3, 0.3));
-    var material_left = new Metal (color (0.8, 0.8, 0.8), 0.3);
+    var material_center = new Dielectric (1.3);
+    var material_left = new Dielectric (1.3);
     var material_right = new Metal (color (0.8, 0.6, 0.2), 1);
 
     world.add (new Sphere (point3 (0, -100.5, -1), 100, material_ground));
