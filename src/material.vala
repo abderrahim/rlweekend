@@ -113,6 +113,17 @@ public class Dielectric : Material {
         double etai_over_etat = rec.front_face ? (1 / ref_idx) : ref_idx;
 
         var unit_direction = r_in.direction.unit_vector ();
+
+        var cos_theta = Math.fmin (unit_direction.negate ().dot (rec.normal), 1);
+        var sin_theta = Math.sqrt (1 - cos_theta * cos_theta);
+        if (etai_over_etat * sin_theta > 1) {
+            // must_reflect
+            var reflected = reflect (unit_direction, rec.normal);
+            scattered = ray (rec.p, reflected);
+            return true;
+        }
+
+        // can refract
         var refracted = refract (unit_direction, rec.normal, etai_over_etat);
         scattered = ray (rec.p, refracted);
         return true;
