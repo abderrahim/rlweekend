@@ -50,19 +50,19 @@ int main (string[] args)
     var world = new HittableList ();
 
     var material_ground = new Lambertian (color (0.8, 0.8, 0.0));
-    var material_left = new Lambertian (color (0.1, 0.2, 0.5));
-    var material_center = new Dielectric (1.5);
+    var material_center = new Lambertian (color (0.1, 0.2, 0.5));
+    var material_left = new Dielectric (1.5);
     var material_right = new Metal (color (0.8, 0.6, 0.2), 0);
 
     world.add (new Sphere (point3 (0, -100.5, -1), 100, material_ground));
     world.add (new Sphere (point3 (0, 0, -1), 0.5, material_center));
-    world.add (new Sphere (point3 (0, 0, -1), -0.4, material_center));
     world.add (new Sphere (point3 (-1, 0, -1), 0.5, material_left));
+    world.add (new Sphere (point3 (-1, 0, -1), -0.4, material_left));
     world.add (new Sphere (point3 (1, 0, -1), 0.5, material_right));
 
     // Camera
 
-    var cam = new Camera (90, aspect_ratio);
+    var cam = new Camera (point3 (-2, 2, 1), point3 (0, 0, -1), vec3 (0, 1, 0), 90, aspect_ratio);
 
     // Render
 
