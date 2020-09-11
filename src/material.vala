@@ -101,6 +101,12 @@ vec3 refract (vec3 uv, vec3 n, double etai_over_etat) {
     return r_out_perp.add (r_out_parallel);
 }
 
+double schlick (double cosine, double ref_idx) {
+    var r0 = (1 - ref_idx) / (1 + ref_idx);
+    r0 = r0 * r0;
+    return r0 + (1 - r0) * Math.pow (1 - cosine, 5);
+}
+
 public class Dielectric : Material {
     double ref_idx;
 
@@ -118,6 +124,13 @@ public class Dielectric : Material {
         var sin_theta = Math.sqrt (1 - cos_theta * cos_theta);
         if (etai_over_etat * sin_theta > 1) {
             // must_reflect
+            var reflected = reflect (unit_direction, rec.normal);
+            scattered = ray (rec.p, reflected);
+            return true;
+        }
+
+        var reflect_prob = schlick (cos_theta, etai_over_etat);
+        if (Random.next_double () < reflect_prob) {
             var reflected = reflect (unit_direction, rec.normal);
             scattered = ray (rec.p, reflected);
             return true;
