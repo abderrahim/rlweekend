@@ -1,12 +1,17 @@
+double degrees_to_radians (double degs) {
+    return degs * Math.PI / 180;
+}
+
 class Camera {
     point3 origin;
     vec3 horizontal;
     vec3 vertical;
     point3 lower_left_corner;
 
-    public Camera () {
-        var aspect_ratio = 16.0 / 9.0;
-        var viewport_height = 2.0;
+    public Camera (double vfov, double aspect_ratio) {
+        var theta = degrees_to_radians (vfov);
+        var h = Math.tan (theta / 2);
+        var viewport_height = 2 * h;
         var viewport_width = aspect_ratio * viewport_height;
         var focal_length = 1.0;
 

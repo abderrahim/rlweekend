@@ -62,7 +62,7 @@ int main (string[] args)
 
     // Camera
 
-    var cam = new Camera ();
+    var cam = new Camera (90, aspect_ratio);
 
     // Render
 
